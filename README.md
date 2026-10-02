@@ -4,12 +4,13 @@ Give your coding agent access to your team's engineering memory in [Scuba](https
 Recall why a decision was made, avoid repeating failed approaches, and preserve useful
 conclusions with their sources.
 
-Install the **Scuba plugin** to get both skills and the hosted MCP connection:
+Install the **Scuba plugin** to get all three skills and the hosted MCP connection:
 
 | Skill | Use it to |
 | --- | --- |
 | `scuba-setup` | Connect Scuba, select a team collection, and configure a repository. |
 | `scuba-codebase-memory` | Recall prior decisions and record approved decisions, findings, incidents, and PR outcomes. |
+| `scuba-review-memory` | Bring relevant engineering lessons and intentional tradeoffs into your existing code review. |
 
 No local Scuba server is required. Each person signs in with their own Scuba account.
 
@@ -118,7 +119,21 @@ already completed setup on this machine, go straight to the workflows below.
 > Record why we chose this approach in our engineering wiki, with the alternatives
 > and the PR link.
 
-Claude Code also exposes `/scuba:scuba-setup` and `/scuba:scuba-codebase-memory`.
+To supplement your existing code review:
+
+> Review this PR using our usual workflow, and use scuba-review-memory to check
+> for repeated mistakes and relevant prior decisions in Scuba.
+
+Or add this instruction to your existing review skill:
+
+> Use scuba-review-memory to bring relevant engineering lessons into the review
+> and check candidate findings against prior decisions before finalizing.
+
+The review skill uses scuba-codebase-memory for retrieval. It preserves your
+review criteria and output format, verifies findings against current code, and
+does not post comments or save memories without authorization.
+
+Claude Code also exposes `/scuba:scuba-setup`, `/scuba:scuba-codebase-memory`, and `/scuba:scuba-review-memory`.
 The skills offer to save valuable conclusions; an explicit filing request authorizes
 that write. Scuba's sharing confirmations still apply.
 
@@ -142,12 +157,13 @@ For hosts without plugin support, or teams that already manage Scuba connections
 install just the portable [Agent Skills](https://agentskills.io/specification):
 
 ```bash
-npx skills add flashback2025/scuba-skills --skill scuba-setup scuba-codebase-memory
+npx skills add flashback2025/scuba-skills --skill scuba-setup scuba-codebase-memory scuba-review-memory
 ```
 
-Choose your agent and project scope. Alternatively, copy the two `skills/` directories
+Choose your agent and project scope. Alternatively, copy the three `skills/` directories
 with their supporting files into `.agents/skills/` for Codex or `.claude/skills/` for
-Claude Code. These methods do not install or authenticate an MCP connection.
+Claude Code. For review-only standalone installation, install both `scuba-review-memory` and
+`scuba-codebase-memory`. These methods do not install or authenticate an MCP connection.
 
 Then reuse your existing Scuba connection or follow [manual MCP setup](skills/scuba-setup/references/mcp-setup.md#manual-connection-alternative).
 Claude supports a committed project `.mcp.json`; Codex supports a trusted project's
