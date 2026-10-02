@@ -29,8 +29,8 @@ install the configured marketplace and plugin when they trust the repository.
 They can also run the commands in the [quick start](../README.md#1-install-the-plugin).
 Each person signs in through `/mcp` after installation.
 
-To pin a reviewed revision, add `ref` to the GitHub source using the release tag or
-commit SHA your team selected. See [Claude's team marketplace guidance](https://code.claude.com/docs/en/plugin-marketplaces)
+To pin a reviewed revision, add `ref` to the GitHub source using the commit SHA
+your team selected. See [Claude's team marketplace guidance](https://code.claude.com/docs/en/plugin-marketplaces)
 and [plugin installation](https://code.claude.com/docs/en/discover-plugins).
 
 ## Codex
@@ -74,8 +74,8 @@ install from the desktop directory. Start a new session or restart the client as
 needed, then complete its Scuba authentication flow. A catalog makes the plugin
 available; committing it does not sign everyone in.
 
-For a pinned release, add `sha` to the plugin's `source` with a reviewed commit SHA,
-or `ref` with a release tag. Update that selection deliberately when upgrading.
+To pin a reviewed revision, add `sha` to the plugin's `source` with that commit SHA.
+Update that selection deliberately when upgrading; no Git release tag is needed.
 Use one installation source: if you installed `scuba@scuba` personally, migrate that
 installation before also installing it from a team catalog. See
 [OpenAI's marketplace documentation](https://developers.openai.com/plugins/build/plugins#marketplace-metadata).

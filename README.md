@@ -77,6 +77,41 @@ upgrades preserve your team's destination. See the [configuration contract](docs
 
 ### 3. Use it
 
+#### Install on your machine or a teammate's
+
+If you're joining a repository that already has the [team setup](docs/team-setup.md)
+committed, pull the latest code and install from that repository:
+
+**Claude Code:** accept the project's plugin installation prompt, or run:
+
+```bash
+claude plugin install scuba@scuba --scope project
+```
+
+**Codex:** register the repository's catalog and install its Scuba entry:
+
+```bash
+codex plugin marketplace add .
+codex plugin add scuba@team-tools
+```
+
+Replace `team-tools` with the `name` in your repository's
+`.agents/plugins/marketplace.json`. You can also install from that source in the
+Codex desktop plugin directory. If the repository has no team plugin configuration,
+use [the installation steps above](#1-install-the-plugin) instead.
+
+Each person then opens a new session, signs in to Scuba through `/mcp` if prompted,
+and asks:
+
+> Use scuba-setup to verify this repository's existing collection configuration
+> and my access. Reuse the configured collection.
+
+Teammates do not need to edit configuration or create another collection. If access
+is missing, ask the collection owner to share it with their Scuba account. If you
+already completed setup on this machine, go straight to the workflows below.
+
+#### Recall and save engineering memory
+
 > Before we change the sync architecture, use scuba-codebase-memory to look for
 > previous decisions and failed approaches.
 
@@ -95,7 +130,7 @@ access to the same collection. The [team setup guide](docs/team-setup.md) includ
 
 - Claude's shared marketplace and enabled-plugin settings.
 - Codex's `.agents/plugins/marketplace.json` team catalog.
-- Pinning a reviewed release and migrating existing local skills.
+- Pinning a reviewed commit and migrating existing local skills.
 - An installation and read-access acceptance check.
 
 Add the [agent guidance snippet](skills/scuba-setup/assets/agent-guidance.md) to your
@@ -142,7 +177,8 @@ claude plugin validate .claude-plugin/plugin.json --strict
 ```
 
 Python is used only for validation, not by the installed workflows. Bump the version
-in both plugin manifests for a release; installed clients can cache by version.
+in both plugin manifests when shipping plugin changes; installed clients can cache
+by version. Git release tags are not required.
 See [behavior checks](docs/behavior-checks.md) for acceptance scenarios.
 
 ## License
