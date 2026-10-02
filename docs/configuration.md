@@ -52,10 +52,13 @@ writes. An incidental memory lookup reports the gap briefly and does not block
 unrelated work. An explicit setup or memory request resolves the missing information
 with the user. Repeated setup reuses an existing verified destination.
 
-## MCP configuration
+## Plugin and MCP configuration
 
-See [client-specific setup](../skills/scuba-setup/references/mcp-setup.md). Codex uses
-`config.toml`; Claude Code can use project `.mcp.json`. The supplied Codex
-`agents/openai.yaml` files declare a tool dependency, not team settings. A root
-`.mcp.json` is intentionally absent from this distribution: installing a skill is
-not the same as installing a client-specific plugin or configuring a connection.
+The plugin bundles the Scuba endpoint. Team plugin catalogs and installation
+instructions live in the [team setup guide](team-setup.md). Each person completes
+the client's authentication flow; credentials are never stored in the destination file.
+
+For standalone skill installation, use [manual MCP setup](../skills/scuba-setup/references/mcp-setup.md#manual-connection-alternative).
+The Codex `agents/openai.yaml` files declare a tool dependency for this alternative;
+they are not destination settings. The distribution's `mcp.json` and `.mcp.json`
+bundle the same endpoint using portable and Claude-compatible transport names.

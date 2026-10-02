@@ -4,17 +4,30 @@ Scuba's hosted endpoint is `https://api.scuba.app/mcp/`. Use the client's native
 remote HTTP transport and OAuth support. A skill installation alone does not create
 an authenticated connection. Reuse a working Scuba connector before adding a duplicate.
 
-## Share the connection with your team
+## Plugin installation
 
-Commit the connection definition in the repository adopting the skills: a root
-`.mcp.json` for Claude Code, or `.codex/config.toml` for Codex. A team using both
-clients may commit both. Merge entries with existing configuration. Each teammate
-still installs the skills, trusts or approves the project as their client requires,
-and signs in to Scuba individually. Never commit credentials or authorization headers.
+Prefer the Scuba plugin for Codex and Claude Code. It bundles both skills and the
+MCP connection. Register `flashback2025/scuba-skills` as a plugin marketplace, then
+install `scuba@scuba` using the client's native plugin installer. For an existing
+team catalog, use that catalog's name instead. Follow the
+[public installation guide](https://github.com/flashback2025/scuba-skills#quick-start)
+for client commands and shared team configuration.
 
-The client sections below show the exact file contents and personal alternatives.
-Project configuration distributes the server definition; `.scuba/config.json`
-separately selects the team's memory collection and does not grant access to it.
+If the plugin is already installed, inspect its enabled state and its MCP connection
+before adding a standalone server. Reload or start a new session if needed, then
+complete the client's OAuth flow. Plugin server names may be namespaced; use the
+actual name shown by the client rather than assuming it is exactly `scuba`.
+
+## Manual connection alternative
+
+Use the following for standalone skills or an existing manually managed connection.
+For team configuration, commit a root `.mcp.json` for Claude Code or
+`.codex/config.toml` for Codex in the adopting repository. Merge with existing
+configuration. Each teammate still installs the skills, trusts or approves the
+project as required, and signs in individually. Never commit credentials.
+
+The connection definition and `.scuba/config.json` have separate purposes: the latter
+selects the memory collection and does not grant access to it.
 
 ## Codex
 

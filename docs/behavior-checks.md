@@ -18,7 +18,11 @@ or a user-authorized test collection; do not write fixtures into a production wi
 | A temporary smoke test succeeds | Read back, undo membership then capture creation, and verify cleanup. |
 | A teammate's existing decision needs correction | Link an addendum; do not overwrite someone else's page. |
 
-For a live onboarding check, install both skills in a separate adopting repository,
+For a live onboarding check, install the plugin in a separate adopting repository,
 sign in using the documented client flow, resolve a collection, and verify reads.
 Only run a write-and-undo check when the user authorizes it, honoring audience and
 destructive confirmations returned by Scuba.
+
+Exercise the native marketplace install and both skill discovery paths using the
+[team acceptance check](team-setup.md#acceptance-check). Repeat for standalone skill
+installation when changing that alternative.

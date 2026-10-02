@@ -4,118 +4,58 @@ Give your coding agent access to your team's engineering memory in [Scuba](https
 Recall why a decision was made, avoid repeating failed approaches, and preserve useful
 conclusions with their sources.
 
+Install the **Scuba plugin** to get both skills and the hosted MCP connection:
+
 | Skill | Use it to |
 | --- | --- |
 | `scuba-setup` | Connect Scuba, select a team collection, and configure a repository. |
 | `scuba-codebase-memory` | Recall prior decisions and record approved decisions, findings, incidents, and PR outcomes. |
 
-These are portable [Agent Skills](https://agentskills.io/specification). Start with
-Codex or Claude Code; other hosts need skill loading, repository file access, and a
-remote HTTP MCP connection with OAuth. No local Scuba server is required.
+No local Scuba server is required. Each person signs in with their own Scuba account.
 
 ## Quick start
 
-### 1. Install the skills
+### 1. Install the plugin
 
-From the code repository where you want engineering memory, use the
-[Vercel Skills CLI](https://github.com/vercel-labs/skills):
-
-```bash
-npx skills add flashback2025/scuba-skills --skill scuba-setup scuba-codebase-memory
-```
-
-Choose your coding agent and project scope in the installer. This installs workflow
-instructions; it does not authenticate Scuba or choose a collection for you.
-
-Alternatively, copy the two directories under `skills/` into your host's skill
-directory: `.agents/skills/` for Codex or `.claude/skills/` for Claude Code. Keep each
-directory's `agents`, `assets`, and `references` alongside its `SKILL.md`. Check for
-existing installations before copying. Follow your host's reload instructions if the
-skills do not appear.
-
-### 2. Connect Scuba
-
-Choose project setup to share the connection definition with your team, or personal
-setup to make it available across your own projects. Reuse a working Scuba connection
-rather than adding a duplicate.
-
-#### Team setup: commit the connection definition
-
-Add the configuration to the **code repository adopting these skills**. Teammates
-get the same server definition when they clone or pull that repository. Teams using
-both clients can commit both files; each client uses its own configuration format.
-
-**Claude Code — `.mcp.json` at the repository root:**
-
-```json
-{
-  "mcpServers": {
-    "scuba": {
-      "type": "http",
-      "url": "https://api.scuba.app/mcp/"
-    }
-  }
-}
-```
-
-Merge the entry alongside existing servers. You can also create or update the file
-from that repository with:
+**Codex** — register the marketplace and install Scuba:
 
 ```bash
-claude mcp add --transport http --scope project scuba https://api.scuba.app/mcp/
+codex plugin marketplace add flashback2025/scuba-skills
+codex plugin add scuba@scuba
 ```
 
-Commit `.mcp.json`. Each teammate approves the project server when prompted, then
-uses `/mcp` in Claude Code to sign in. This is Claude Code's documented
-[project-scope setup](https://code.claude.com/docs/en/mcp#project-scope).
+The marketplace also appears as a source in the desktop app's plugin directory.
+If your Codex version does not offer `plugin add`, install from that directory.
+Restart or open a new session after installation, then complete the Scuba sign-in
+when prompted. Inspect the plugin's connection in `/mcp`; use the connection name
+shown by your client when authenticating.
 
-**Codex — `.codex/config.toml` in the repository:**
-
-```toml
-[mcp_servers.scuba]
-url = "https://api.scuba.app/mcp/"
-```
-
-Merge this table into the existing file and commit it. Each teammate trusts the
-project, then runs `codex mcp login scuba` from that repository. Codex loads
-project-scoped configuration only for trusted projects; see its
-[MCP configuration guide](https://developers.openai.com/codex/mcp).
-
-These files share the endpoint definition. Each person still installs the skills,
-completes their own OAuth login, and needs access to the team's Scuba collection.
-Do not commit tokens or authorization headers. The destination collection is a
-separate setting in `.scuba/config.json`, covered in step 3.
-
-#### Personal setup: connect across your projects
-
-For **Codex**:
+**Claude Code** — run from the repository where you want engineering memory:
 
 ```bash
-codex mcp add scuba --url https://api.scuba.app/mcp/
-codex mcp login scuba
+claude plugin marketplace add flashback2025/scuba-skills
+claude plugin install scuba@scuba --scope project
 ```
 
-For **Claude Code**:
+Reload plugins or start a new session, then use `/mcp` to sign in to the plugin's
+Scuba connection. Project scope records the enabled plugin in `.claude/settings.json`;
+teammates still install it on their own machines. Use `--scope user` for personal
+installation across projects.
 
-```bash
-claude mcp add --transport http --scope user scuba https://api.scuba.app/mcp/
-```
+Already using Scuba? Check for a working connection and existing copies of these
+skills before installing. When migrating, verify the plugin first, then remove only
+the superseded standalone Scuba configuration and skill copies. Plugin connections
+may have different names and may require their own sign-in. Do not configure both
+manual setup and the plugin by default.
 
-Then run `/mcp` in Claude Code and complete the browser login.
-
-See [MCP setup](skills/scuba-setup/references/mcp-setup.md) for troubleshooting.
-The Codex skill metadata also declares the MCP dependency; support for dependency
-installation varies by host.
-
-### 3. Configure your team's memory
+### 2. Configure your team's memory
 
 In your adopting repository, ask your agent:
 
 > Use scuba-setup to configure engineering memory for this repository. Help me
 > choose an existing shared Eng Wiki collection or create one for my team.
 
-The setup skill helps you select a collection, check access, and create
-`.scuba/config.json` in that repository:
+The setup skill checks access and writes `.scuba/config.json` in that repository:
 
 ```json
 {
@@ -126,23 +66,16 @@ The setup skill helps you select a collection, check access, and create
 }
 ```
 
-Replace the placeholder with the actual collection ID. The setup skill can resolve
-a collection link or name through Scuba. Collection creation through MCP starts
-private: use Scuba's sharing controls to give your teammates access. Collection
-access must be checked for each person; a working config does not grant access.
+The skill can resolve a collection link or name to its ID. Collection creation
+through MCP starts private: use Scuba's sharing controls to give teammates access.
+A destination file does not grant access or authorize writes.
 
-This file is **a Scuba skills convention**, not an MCP or Agent Skills standard.
-The skills explicitly read it; no client automatically substitutes these values.
-It contains a destination, never tokens or credentials. Keep it outside installed
-skill directories so skill upgrades preserve team settings.
+This file is **a Scuba skills convention**, separate from MCP and plugin configuration.
+Private team repositories may commit it; public repositories should ignore the real
+file and commit an example instead. It stays outside the installed plugin so
+upgrades preserve your team's destination. See the [configuration contract](docs/configuration.md).
 
-Private team repositories may commit it. In a public repository, keep real team
-configuration untracked and ignore `.scuba/config.json`; commit an example instead.
-Several repositories may point at the same collection. See the
-[configuration contract](docs/configuration.md) and
-[example config](skills/scuba-setup/assets/scuba-config.example.json).
-
-### 4. Use it
+### 3. Use it
 
 > Before we change the sync architecture, use scuba-codebase-memory to look for
 > previous decisions and failed approaches.
@@ -150,31 +83,67 @@ Several repositories may point at the same collection. See the
 > Record why we chose this approach in our engineering wiki, with the alternatives
 > and the PR link.
 
-Reads retrieve historical context and check it against the current code. The skill
-offers to save valuable conclusions; an explicit filing request authorizes that
-write. Sharing confirmations from Scuba still apply. It reports what was saved,
-what became shared, and undo information when available.
+Claude Code also exposes `/scuba:scuba-setup` and `/scuba:scuba-codebase-memory`.
+The skills offer to save valuable conclusions; an explicit filing request authorizes
+that write. Scuba's sharing confirmations still apply.
 
-For recurring use, add the [agent guidance snippet](skills/scuba-setup/assets/agent-guidance.md)
-to your repository's existing `AGENTS.md` or `CLAUDE.md`.
+## Set it up for your team
 
-## Configuration and setup
+Commit the client-specific plugin configuration and your destination in the adopting
+repository. Every teammate installs the same plugin, signs in separately, and verifies
+access to the same collection. The [team setup guide](docs/team-setup.md) includes:
 
-- [Configuration contract](docs/configuration.md)
-- [MCP connection examples](skills/scuba-setup/references/mcp-setup.md)
+- Claude's shared marketplace and enabled-plugin settings.
+- Codex's `.agents/plugins/marketplace.json` team catalog.
+- Pinning a reviewed release and migrating existing local skills.
+- An installation and read-access acceptance check.
 
-## Development
+Add the [agent guidance snippet](skills/scuba-setup/assets/agent-guidance.md) to your
+existing `AGENTS.md` or `CLAUDE.md` when you want proactive memory recall.
 
-Validate the skill metadata, packaged references, configuration schema, and examples:
+## Alternatives: standalone skills and MCP
+
+For hosts without plugin support, or teams that already manage Scuba connections,
+install just the portable [Agent Skills](https://agentskills.io/specification):
+
+```bash
+npx skills add flashback2025/scuba-skills --skill scuba-setup scuba-codebase-memory
+```
+
+Choose your agent and project scope. Alternatively, copy the two `skills/` directories
+with their supporting files into `.agents/skills/` for Codex or `.claude/skills/` for
+Claude Code. These methods do not install or authenticate an MCP connection.
+
+Then reuse your existing Scuba connection or follow [manual MCP setup](skills/scuba-setup/references/mcp-setup.md#manual-connection-alternative).
+Claude supports a committed project `.mcp.json`; Codex supports a trusted project's
+`.codex/config.toml`. Both examples and personal setup are documented there.
+Collection setup is the same for plugin and standalone installations.
+
+## Package and maintain
+
+This repository is a single plugin and two small marketplace catalogs:
+
+- `plugin.json`, `mcp.json`, and `skills/`: portable plugin package.
+- `.agents/plugins/marketplace.json`: Codex catalog.
+- `.claude-plugin/plugin.json` and `.mcp.json`: Claude-compatible package metadata and MCP configuration.
+- `.claude-plugin/marketplace.json`: Claude catalog.
+
+The catalogs distribute the same skills and endpoint. They are GitHub-hosted
+catalogs, not listings in the vendors' official directories. Official directory
+submission is separate. This follows [OpenAI's plugin packaging guide](https://developers.openai.com/plugins/build/plugins)
+and [Claude's marketplace guide](https://code.claude.com/docs/en/plugin-marketplaces).
+
+Validate the package, skills, references, and destination schema:
 
 ```bash
 uv run scripts/validate.py
+claude plugin validate . --strict
+claude plugin validate .claude-plugin/plugin.json --strict
 ```
 
-The workflow instructions have no Python runtime dependency. Python is used only
-for repository validation. See [behavior checks](docs/behavior-checks.md) for manual
-scenarios to exercise with your agent. Full client OAuth and team sharing should be
-verified in your own account before rollout.
+Python is used only for validation, not by the installed workflows. Bump the version
+in both plugin manifests for a release; installed clients can cache by version.
+See [behavior checks](docs/behavior-checks.md) for acceptance scenarios.
 
 ## License
 

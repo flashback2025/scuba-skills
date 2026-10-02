@@ -1,0 +1,19 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "scuba",
+  "version": "0.1.0",
+  "description": "Shared engineering memory for your team: recall decisions and preserve useful conclusions in Scuba.",
+  "author": {
+    "name": "Scuba",
+    "url": "https://scuba.app"
+  },
+  "homepage": "https://github.com/flashback2025/scuba-skills",
+  "repository": "https://github.com/flashback2025/scuba-skills",
+  "license": "MIT",
+  "keywords": [
+    "scuba",
+    "engineering",
+    "memory",
+    "knowledge"
+  ]
+}
