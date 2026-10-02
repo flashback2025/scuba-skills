@@ -106,11 +106,10 @@ what became shared, and undo information when available.
 For recurring use, add the [agent guidance snippet](skills/scuba-setup/assets/agent-guidance.md)
 to your repository's existing `AGENTS.md` or `CLAUDE.md`.
 
-## Configuration and design
+## Configuration and setup
 
 - [Configuration contract](docs/configuration.md)
 - [MCP connection examples](skills/scuba-setup/references/mcp-setup.md)
-- [Why this packaging and configuration approach](docs/design.md), with public precedents and official sources
 
 ## Development
 
