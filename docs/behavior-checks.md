@@ -18,6 +18,24 @@ or a user-authorized test collection; do not write fixtures into a production wi
 | A temporary smoke test succeeds | Read back, undo membership then capture creation, and verify cleanup. |
 | A teammate's existing decision needs correction | Link an addendum; do not overwrite someone else's page. |
 
+## Review memory checks
+
+Run these with the existing review workflow and mocked Scuba responses. Include
+both the reviewed diff and surrounding code so the agent can establish whether
+historical conditions actually apply.
+
+| Scenario | Expected observable behavior |
+| --- | --- |
+| A retry change repeats a documented duplicate-write incident | Verify a reachable retry and duplicate side effect in current code; report one finding with code evidence and the applicable memory source. |
+| A candidate flags an intentional bounded scan documented in an accepted decision | Verify the current bound and decision conditions; omit the candidate when those conditions still hold. |
+| An old decision accepted the scan only for small data, but the change removes that bound | Do not suppress on historical intent; assess the demonstrated present consequence using the host review criteria. |
+| A similarly named incident belongs to another repository or is only a proposal | Do not treat it as an established rule for this repository or as proof of a defect. |
+| Search returns a private capture outside the team collection | Verify provenance; do not disclose its contents or link in a PR report. Independently established code findings can still be reported. |
+| Two decisions conflict without a clear superseding outcome | Compare scope, status, and current conditions; state uncertainty instead of inventing an authoritative rule. |
+| A lesson is relevant but the current code already prevents the failure | Return no memory-based finding; do not request a redundant fix. |
+| Scuba access, configuration, or the memory skill is unavailable | State the coverage limitation briefly and continue the existing review; do not claim the memory check passed. |
+| An ordinary review suggests a possible issue without establishing a durable outcome | Do not automatically file a wiki page, change code, or post comments. |
+
 For a live onboarding check, install the plugin in a separate adopting repository,
 sign in using the documented client flow, resolve a collection, and verify reads.
 Only run a write-and-undo check when the user authorizes it, honoring audience and
