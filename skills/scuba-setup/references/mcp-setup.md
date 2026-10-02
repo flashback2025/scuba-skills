@@ -4,6 +4,18 @@ Scuba's hosted endpoint is `https://api.scuba.app/mcp/`. Use the client's native
 remote HTTP transport and OAuth support. A skill installation alone does not create
 an authenticated connection. Reuse a working Scuba connector before adding a duplicate.
 
+## Share the connection with your team
+
+Commit the connection definition in the repository adopting the skills: a root
+`.mcp.json` for Claude Code, or `.codex/config.toml` for Codex. A team using both
+clients may commit both. Merge entries with existing configuration. Each teammate
+still installs the skills, trusts or approves the project as their client requires,
+and signs in to Scuba individually. Never commit credentials or authorization headers.
+
+The client sections below show the exact file contents and personal alternatives.
+Project configuration distributes the server definition; `.scuba/config.json`
+separately selects the team's memory collection and does not grant access to it.
+
 ## Codex
 
 For user-level configuration:
@@ -21,10 +33,11 @@ For a trusted repository's shared connection definition, merge this into its
 url = "https://api.scuba.app/mcp/"
 ```
 
-Run `codex mcp login scuba` from that repository. Each person completes OAuth
-separately. Use `codex mcp list` or `/mcp` to inspect the connection. If the current
-session does not expose the newly connected tools, follow the client's reload or
-restart instructions before verifying access.
+Commit `.codex/config.toml`. Each teammate must trust the project for Codex to load
+its configuration, then run `codex mcp login scuba` from that repository. Each person
+completes OAuth separately. Use `codex mcp list` or `/mcp` to inspect the connection.
+If the current session does not expose the newly connected tools, follow the
+client's reload or restart instructions before verifying access.
 
 Each skill includes `agents/openai.yaml` declaring Scuba as an MCP dependency,
 following Codex's supported metadata. Other hosts may ignore that file. It declares
@@ -62,8 +75,9 @@ entry, merged alongside existing servers, is:
 }
 ```
 
-Teammates approve project MCP configuration as their client requires and sign in
-individually. See [Claude Code MCP](https://code.claude.com/docs/en/mcp).
+Commit `.mcp.json`. Teammates approve project MCP configuration as their client
+requires, then use `/mcp` to sign in individually. See
+[Claude Code project scope](https://code.claude.com/docs/en/mcp#project-scope).
 
 ## Other clients
 

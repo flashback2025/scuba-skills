@@ -18,8 +18,10 @@ Keep credentials in the MCP client's authentication store, outside repository fi
    connections may expose Scuba. Match capabilities rather than a literal prefix.
 2. If tools are missing or unauthenticated, follow
    [MCP setup](references/mcp-setup.md) for that client. Merge the Scuba entry into
-   existing configuration without replacing other servers. Let the user complete
-   OAuth in their browser; do not request or store their token in this repository.
+   existing configuration without replacing other servers. For team setup in a
+   repository, prefer the client's project-scoped connection definition unless the
+   user requests personal setup; explain what to commit and the separate sign-in
+   each teammate needs. Let the user complete OAuth in their browser; do not request or store their token in this repository.
 3. Use `get_me` to establish the active account when available. Discover `search`,
    `get_collection_by_id`, `get_captures_by_id`, and `read_capture`. For saving memory,
    also check `create_text_capture` and `add_captures_to_collection`. Use the current

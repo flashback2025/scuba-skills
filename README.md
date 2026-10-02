@@ -35,25 +35,77 @@ skills do not appear.
 
 ### 2. Connect Scuba
 
-**Codex**:
+Choose project setup to share the connection definition with your team, or personal
+setup to make it available across your own projects. Reuse a working Scuba connection
+rather than adding a duplicate.
+
+#### Team setup: commit the connection definition
+
+Add the configuration to the **code repository adopting these skills**. Teammates
+get the same server definition when they clone or pull that repository. Teams using
+both clients can commit both files; each client uses its own configuration format.
+
+**Claude Code — `.mcp.json` at the repository root:**
+
+```json
+{
+  "mcpServers": {
+    "scuba": {
+      "type": "http",
+      "url": "https://api.scuba.app/mcp/"
+    }
+  }
+}
+```
+
+Merge the entry alongside existing servers. You can also create or update the file
+from that repository with:
+
+```bash
+claude mcp add --transport http --scope project scuba https://api.scuba.app/mcp/
+```
+
+Commit `.mcp.json`. Each teammate approves the project server when prompted, then
+uses `/mcp` in Claude Code to sign in. This is Claude Code's documented
+[project-scope setup](https://code.claude.com/docs/en/mcp#project-scope).
+
+**Codex — `.codex/config.toml` in the repository:**
+
+```toml
+[mcp_servers.scuba]
+url = "https://api.scuba.app/mcp/"
+```
+
+Merge this table into the existing file and commit it. Each teammate trusts the
+project, then runs `codex mcp login scuba` from that repository. Codex loads
+project-scoped configuration only for trusted projects; see its
+[MCP configuration guide](https://developers.openai.com/codex/mcp).
+
+These files share the endpoint definition. Each person still installs the skills,
+completes their own OAuth login, and needs access to the team's Scuba collection.
+Do not commit tokens or authorization headers. The destination collection is a
+separate setting in `.scuba/config.json`, covered in step 3.
+
+#### Personal setup: connect across your projects
+
+For **Codex**:
 
 ```bash
 codex mcp add scuba --url https://api.scuba.app/mcp/
 codex mcp login scuba
 ```
 
-**Claude Code**:
+For **Claude Code**:
 
 ```bash
 claude mcp add --transport http --scope user scuba https://api.scuba.app/mcp/
 ```
 
-Then run `/mcp` in Claude Code and complete the browser login. Each teammate signs
-in with their own Scuba account. Existing working Scuba connectors can be reused.
+Then run `/mcp` in Claude Code and complete the browser login.
 
-See [MCP setup](skills/scuba-setup/references/mcp-setup.md) for project-scoped
-configuration and troubleshooting. The Codex skill metadata also declares the MCP
-dependency; support for dependency installation varies by host.
+See [MCP setup](skills/scuba-setup/references/mcp-setup.md) for troubleshooting.
+The Codex skill metadata also declares the MCP dependency; support for dependency
+installation varies by host.
 
 ### 3. Configure your team's memory
 
