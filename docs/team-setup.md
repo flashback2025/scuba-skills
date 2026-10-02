@@ -14,7 +14,8 @@ Merge these entries into the adopting repository's `.claude/settings.json`:
     "scuba": {
       "source": {
         "source": "github",
-        "repo": "flashback2025/scuba-skills"
+        "repo": "flashback2025/scuba-skills",
+        "ref": "main"
       }
     }
   },
@@ -29,8 +30,11 @@ install the configured marketplace and plugin when they trust the repository.
 They can also run the commands in the [quick start](../README.md#1-install-the-plugin).
 Each person signs in through `/mcp` after installation.
 
-To pin a reviewed revision, add `ref` to the GitHub source using the commit SHA
-your team selected. See [Claude's team marketplace guidance](https://code.claude.com/docs/en/plugin-marketplaces)
+The marketplace follows `main`. Claude's marketplace `ref` accepts a branch or
+tag, not a commit SHA; omitting it uses the repository's default branch. Commit
+pinning uses `sha` on an individual plugin source inside a marketplace, which is
+a different configuration object. No Git release tag is needed. See
+[Claude's marketplace source reference](https://code.claude.com/docs/en/plugins/marketplace-reference#marketplace-sources)
 and [plugin installation](https://code.claude.com/docs/en/discover-plugins).
 
 ## Codex
@@ -104,7 +108,9 @@ plugin upgrade should not replace team settings or those policies.
 
 ## Acceptance check
 
-Use a fresh client session in the adopting repository:
+First test marketplace registration and installation with an empty client plugin
+cache. A new session with an already registered marketplace can hide a broken
+source configuration. Then use a fresh session in the adopting repository:
 
 1. Verify the installed Scuba version, both skills, and the MCP server inventory.
 2. Complete sign-in and use `get_me`, when available, to verify the account.
